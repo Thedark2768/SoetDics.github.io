@@ -28,9 +28,9 @@ input::placeholder{
 }
 
 #palabra {
-  color: black;
+  color: #FBFCFF;
   display: none;
-  background: #FBFCFF;
+  background: #1C6E8C;
   padding: 1em;
   border-radius: 0.5em;
   font-family: "Times New Roman", Times, serif;
