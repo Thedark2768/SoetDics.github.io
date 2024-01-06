@@ -117,6 +117,8 @@ function toggleMode() {
   // Save the state in localStorage
   if (isRandom === true) {
     localStorage.setItem("randomMode", isRandom);
+  } else {
+      localStorage.setItem("randomMode", isRandom);
   }
 
   elements.searchInput.disabled = isRandom;
@@ -163,6 +165,11 @@ window.onload = function () {
     // Hide the div after 5 seconds
     setTimeout(function() {
       elements.savedDiv.classList.remove('show');
-    }, 5000); // 5000 milliseconds = 5 seconds
+    }, 3000); // 3000 milliseconds = 3 seconds
   }
 };
+
+document.addEventListener('copy', function (event) {
+    event.preventDefault();
+    alert("The easy way, it's not here.");
+});
