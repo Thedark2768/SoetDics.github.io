@@ -1,3 +1,5 @@
+/* Estilos (personalízalos según tu diseño) */
+
 body, html {
   background: #274156;
   font-family: Arial, sans-serif;
@@ -6,11 +8,11 @@ body, html {
   margin: 0;
 }
 
-#titulo__content{
+#title__content{
   height: 3em;
 }
 
-#subtitulo{
+#caption{
   color: #e3d864;
   display: none;
   margin-top: -1.3em;
@@ -35,7 +37,7 @@ input::placeholder{
   color: #FBFCFF;
 }
 
-#palabra {
+#frase {
   color: #FBFCFF;
   display: none;
   background: #1C6E8C;
@@ -71,19 +73,20 @@ input::placeholder{
   color: #FBFCFF;
 }
 
-#svg__lupa{
+#svg__lens{
   padding-top: 0.3em;
   padding-bottom: 0.3em;
   background: #1C6E8C;
   height: 2em;
 }
 
-#svg__lupa__svg{
+#svg__lens__svg{
   transition: 0.3s;
 }
 
-#svg__lupa__svg:hover{
+#svg__lens__svg:hover{
   opacity: 1;
+  cursor: pointer; /* Cursor tipo puntero al pasar por encima */
 }
 
 #svg__settings{
@@ -103,7 +106,7 @@ input::placeholder{
 
 #svg__settings__svg:hover{
   opacity: 1;
-  
+  cursor: pointer; /* Cursor tipo puntero al pasar por encima */
 }
 
 .contenedor {
@@ -111,4 +114,33 @@ input::placeholder{
   justify-content: center;
   align-items: center;
   margin-top: 20px; /* Puedes ajustar este valor según sea necesario */
+}
+
+#saved__div{
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0; /* Inicialmente transparente */
+    visibility: hidden; /* Inicialmente oculto */
+    transition: 0.5s;
+}
+
+#saved{
+  background-color: #4CAF50; /* Color de fondo verde */
+    color: white; /* Color del texto blanco */
+    padding: 0.2em 0.7em; /* Espaciado interno */
+    font-size: 1em; /* Tamaño de fuente */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor tipo puntero al pasar por encima */
+}
+
+#saved:hover{
+  background-color: #45a049; /* Color de fondo más oscuro al pasar el mouse */
+}
+
+#saved__div.show {
+    opacity: 1;
+    visibility: visible;
 }
