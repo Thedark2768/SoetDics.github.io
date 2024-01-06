@@ -1,11 +1,16 @@
 // Elementos del DOM
-const palabra = document.getElementById("palabra");
-const searchInput = document.getElementById("searchInput"); // Input donde se ingresa la palabra a buscar
-const word = document.getElementById("word"); // Elemento donde se muestra la palabra buscada
-const category = document.getElementById("category"); // Elemento donde se muestra la categoría de la palabra
-const definition = document.getElementById("definition"); // Elemento donde se muestra la definición de la palabra
-const example = document.getElementById("example"); // Elemento donde se muestra un ejemplo del uso de la palabra
-const errorMessage = document.getElementById("error__message"); // Elemento para mostrar mensajes de error al usuario
+const elements = {
+  setting: document.getElementById("svg__settings"),
+  lupa: document.getElementById("svg__lupa"),
+  subtitle: document.getElementById("subtitulo"),
+  searchInput: document.getElementById("searchInput"), // Input donde se ingresa la palabra a buscar
+  palabra: document.getElementById("palabra"),
+  word: document.getElementById("word"), // Elemento donde se muestra la palabra buscada
+  category: document.getElementById("category"), // Elemento donde se muestra la categoría de la palabra
+  definition: document.getElementById("definition"), // Elemento donde se muestra la definición de la palabra
+  example: document.getElementById("example"), // Elemento donde se muestra un ejemplo del uso de la palabra
+  errorMessage: document.getElementById("error__message"), // Elemento para mostrar mensajes de error al usuario
+};
 
 // Diccionario de palabras y sus detalles
 let diccionario = {
@@ -21,10 +26,10 @@ let diccionario = {
     ejemplo: "Der tresk soet.",
     categoria: "Sust."
   },
-}
+};
 
 // Evento que maneja la entrada del usuario
-searchInput.addEventListener('input', handleInput);
+elements.searchInput.addEventListener('input', handleInput);
 
 // Función para filtrar caracteres no deseados
 function handleInput(event) {
@@ -43,61 +48,93 @@ function handleInput(event) {
 // Función para mostrar mensajes de error al usuario
 function animacionError(mensaje) {
   // Se limpian los campos de palabra, categoría, definición y ejemplo
-    palabra.style.display = "none";
-  word.innerText = "";
-  category.innerText = "";
-  definition.innerText = "";
-  example.innerText = "";
+  elements.palabra.style.display = "none";
+  elements.word.innerText = "";
+  elements.category.innerText = "";
+  elements.definition.innerText = "";
+  elements.example.innerText = "";
 
-  
   if (mensaje !== "none") {
     // Si el mensaje no es 'none', se muestra en el área de mensajes de error
-    errorMessage.innerText = mensaje;
+    elements.errorMessage.innerText = mensaje;
   } else {
     // Si el mensaje es 'none', se limpia el área de mensajes de error
-    errorMessage.innerText = "";
+    elements.errorMessage.innerText = "";
   }
-    
-    searchInput.focus();
+  
+  elements.searchInput.focus();
 }
 
-// Función para definir una palabra buscada en el diccionario
-function definirPalabra(){
-  const palabraBuscada = searchInput.value.toLowerCase(); // Se convierte la palabra ingresada a minúsculas para buscarla en el diccionario
-    palabra.style.display = "block";
-  word.innerText = diccionario[palabraBuscada].palabra; // Se muestra la palabra encontrada
-  category.innerText = diccionario[palabraBuscada].categoria; // Se muestra la categoría de la palabra
-  definition.innerText = diccionario[palabraBuscada].definicion; // Se muestra la definición de la palabra
-  example.innerText = diccionario[palabraBuscada].ejemplo; // Se muestra un ejemplo de uso de la palabra
+function obtenerPalabraAleatoria(diccionario) {
+  const keys = Object.keys(diccionario);
+  const randomKey = keys[Math.floor(Math.random() * keys.length)];
+  return diccionario[randomKey];
+}
+
+function definirPalabra(aleatorio, palabra = null) {
+  if (!aleatorio && palabra !== null && diccionario[palabra]) {
+    const wordm = diccionario[palabra];
+    mostrarPalabra(wordm);
+  } else if (aleatorio) {
+    const palabraAleatoria = obtenerPalabraAleatoria(diccionario);
+    mostrarPalabra(palabraAleatoria);
+  }
+}
+
+function mostrarPalabra(wordm) {
+  // Aquí debes manipular la interfaz para mostrar los valores del objeto 'word'
+  elements.word.innerText = wordm.palabra;
+  elements.definition.innerText = wordm.definicion;
+  elements.example.innerText = wordm.ejemplo;
+  elements.category.innerText = wordm.categoria;
 }
 
 // Función que se activa al presionar el botón de búsqueda
 function buscar(event) {
-  const searchInput = document.getElementById('searchInput');
-
-  if (searchInput.disabled) {
-    return; // Si está deshabilitado, salir de la función
-  }
-
-  if (event.type === 'click' || (event.type === 'keypress' && event.keyCode === 13)) {
-    if (searchInput.value === '') {
-      animacionError("* Escriba la palabra a definir, por favor.");
+  const searchInput = elements.searchInput;
+  if (searchInput.getAttribute("placeholder") === "Aleatorio") {
+    elements.palabra.style.display = "block";
+    definirPalabra(true);
+  } else if (
+    (event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) &&
+    searchInput.value !== ''
+  ) {
+    const palabraBuscada = searchInput.value.toLowerCase();
+    if (diccionario[palabraBuscada]) {
+      elements.palabra.style.display = "block";
+      definirPalabra(false, palabraBuscada);
+      elements.errorMessage.innerText = "";
+      searchInput.blur();
+      // Aquí puedes agregar la lógica para mostrar la palabra buscada en la interfaz
     } else {
-      if (diccionario[searchInput.value.toLowerCase()]) {
-        animacionError(null);
-        definirPalabra();
-        searchInput.blur();
-      } else {
-        animacionError("* Palabra no reconocida en el diccionario.");
-      }
+      animacionError("* Palabra no reconocida en el diccionario.");
+      // Puedes manejar el mensaje de error en la interfaz aquí
     }
+  } else {
+    animacionError("* Escriba la palabra a definir, por favor.");
+    // Puedes manejar el mensaje de error en la interfaz aquí
   }
 }
 
-function mostrarVentana() {
-  document.getElementById("ajustes").classList.add("mostrar");
-}
+function cambiarModo() {
+  const placeholderValue = (elements.searchInput.getAttribute("placeholder") === "Buscar") ? "Aleatorio" : "Buscar";
+  const isAleatorio = (placeholderValue === "Aleatorio");
+  
+  elements.searchInput.disabled = isAleatorio;
+  elements.searchInput.setAttribute("placeholder", placeholderValue);
+  elements.searchInput.value = "";
+  elements.palabra.style.display = "none";
 
-function cerrarVentana() {
-  document.getElementById("ajustes").classList.remove("mostrar");
+  [elements.word, elements.category, elements.definition, elements.example, elements.errorMessage].forEach(element => element.innerText = "");
+
+  const backgroundColorBody = isAleatorio ? "#1C6E8C" : "#274156";
+  const backgroundColorInput = isAleatorio ? "#274156" : "#1C6E8C";
+
+  document.body.style.backgroundColor = backgroundColorBody;
+  document.documentElement.style.backgroundColor = backgroundColorBody;
+  elements.subtitle.style.display = isAleatorio ? "block" : "none";
+  elements.lupa.style.backgroundColor = backgroundColorInput;
+  elements.setting.style.backgroundColor = backgroundColorInput;
+  elements.searchInput.style.backgroundColor = backgroundColorInput;
+  elements.palabra.style.backgroundColor =  backgroundColorInput;
 }
