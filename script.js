@@ -12,6 +12,16 @@ const elements = {
   example: document.getElementById("example"),
   errorMessage: document.getElementById("error__message"),
 };
+let language = navigator.language.startsWith('en') ? 'english' : navigator.language.startsWith('es') ? 'spanish' : navigator.language.startsWith('de') ? 'german' : 'english';
+
+if (language === "spanish") {
+    window.location.href = 'index__spanish.html';
+} else if (language === "german"){
+    window.location.href = 'index__german.html';
+}
+
+
+let mode = "Search";
 
 // Dictionary of words and details
 let dictionary = {
@@ -38,12 +48,12 @@ function handleInput(event) {
   const filteredValue = inputValue.replace(/[^aAeEoOtTsSpPkKrRɾ]/g, '');
 
   if (inputValue !== filteredValue) {
-    // Activate error animation if invalid characters are entered
-      elements.frase.style.display = "none";
-    showError("* The entered character is not accepted in this language.");
+    // Activar la animación de error si se introducen caracteres no válidos
+    elements.frase.style.display = "none";
+    showError("* El carácter ingresado no se acepta en este idioma.");
   }
 
-  // Update input value with allowed characters
+  // Actualizar el valor de entrada con los caracteres permitidos
   event.target.value = filteredValue;
 }
 
@@ -58,6 +68,7 @@ function showError(message) {
   if (message !== "none") {
     // Show the error message in the error area
     elements.errorMessage.innerText = message;
+    elements.frase.style.display = "none";
   } else {
     // Clear the error area
     elements.errorMessage.innerText = "";
@@ -92,7 +103,7 @@ function showWord(selectedWord) {
 // Function triggered when the search button is pressed
 function search(event) {
   const searchInput = elements.searchInput;
-  if (searchInput.getAttribute("placeholder") === "Random") {
+  if (mode === "Random") {
     elements.frase.style.display = "block";
     defineWord(true);
   } else if ((event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) && searchInput.value !== '') {
@@ -111,18 +122,20 @@ function search(event) {
 }
 
 function toggleMode() {
-  const placeholderValue = (elements.searchInput.getAttribute("placeholder") === "Search") ? "Random" : "Search";
-  const isRandom = (placeholderValue === "Random");
+  const modeOn = (mode === "Search") ? "Random" : "Search";
+  const isRandom = (modeOn === "Random");
 
   // Save the state in localStorage
   if (isRandom === true) {
+    mode = "Random"
     localStorage.setItem("randomMode", isRandom);
   } else {
+  mode = "Search"
       localStorage.setItem("randomMode", isRandom);
   }
 
   elements.searchInput.disabled = isRandom;
-  elements.searchInput.setAttribute("placeholder", placeholderValue);
+  elements.searchInput.setAttribute("placeholder", modeOn);
   elements.searchInput.value = "";
   elements.frase.style.display = "none";
 
